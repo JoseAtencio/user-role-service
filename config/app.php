@@ -210,6 +210,8 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
+        'JsonApi' => LaravelJsonApi\Core\Facades\JsonApi::class,
+        'JsonApiRoute' => LaravelJsonApi\Laravel\Facades\JsonApiRoute::class,
     ])->toArray(),
 
 ];
