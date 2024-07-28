@@ -17,5 +17,6 @@ class RoleTableSeeder extends Seeder
         Role::create(['name'=>'Admin','description'=>'Admin  CEO rank']);
         Role::create(['name'=>'Assistant','description'=>'Assistant Supervisor rank']);
         Role::create(['name'=>'Guest','description'=>'Guest Guest rank']);
+        Role::create(['name'=>'No Access','description'=>'Guest Blocked rank']);
     }
 }

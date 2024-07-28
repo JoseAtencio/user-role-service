@@ -7,6 +7,8 @@ use LaravelJsonApi\Laravel\Http\Controllers\Actions;
 use LaravelJsonApi\Core\Responses\DataResponse;
 use App\JsonApi\V1\UserCreates\UserCreateRequest;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -22,19 +24,52 @@ class UserController extends Controller
     use Actions\AttachRelationship;
     use Actions\DetachRelationship;
 
-    public function index(){
+    public function index()
+    {
         $users = User::all();
         return DataResponse::make($users);
     }
-    /*
-        public function store(UserCreateRequest $request)
-    {
-        $data = $request->only(['name', 'email', 'dni', 'password', 'phone', 'address']);
-        $data['password'] = Hash::make($data['password']);
-        $user = User::create($data);
-        return DataResponse::make($user)->withStatus(201);
-    }
-    */
-    
 
+    public function show($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        return DataResponse::make($user);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        $user->update($request->all());
+
+        return DataResponse::make([
+            'message' => 'User updated successfully',
+            'user' => $user
+        ]);
+    }
+
+    public function destroy($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        $user->delete();
+
+        return DataResponse::make([
+            'message' => 'User deleted successfully',
+            'user' => $user
+        ]);
+    }
 }

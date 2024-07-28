@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Role;
+use App\Models\Permission;
 use Illuminate\Database\Seeder;
+use App\Enums\PermissionEnum;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,11 +14,37 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        $this->call(PermissionTableSeeder::class);
+        $this->call(RoleTableSeeder::class);
+        $this->call(UserTableSeeder::class);
+        
+        $this->assignPermissionsToRoles();
+    }
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+    private function assignPermissionsToRoles()
+    {
+        $rolesPermissions = [
+            'Owner' => Permission::all(),
+            'Admin' => Permission::all()->filter(function ($permission) {
+                return $permission->code !== PermissionEnum::DELETE_USERS->value;
+            }),
+            'Assistant' => Permission::all()->filter(function ($permission) {
+                return !str_contains($permission->code, 'edit_users') &&
+                       !str_contains($permission->code, 'delete_users') &&
+                       !str_contains($permission->code, 'edit_enterprise') &&
+                       !str_contains($permission->code, 'delete_enterprise');
+            }),
+            'Guest' => Permission::all()->filter(function ($permission) {
+                return str_contains($permission->code, 'view_users') ||
+                       str_contains($permission->code, 'view_enterprise') ||
+                       str_contains($permission->code, 'create_notifies');
+            }),
+            'No Access' => collect(),
+        ];
+
+        foreach ($rolesPermissions as $roleName => $permissions) {
+            $role = Role::where('name', $roleName)->first();
+            $role->permissions()->sync($permissions);
+        }
     }
 }
