@@ -24,8 +24,6 @@ class CheckPermissions
         if (!$user->role->permissions->isEmpty()) {
             $abilities = $user->role->permissions->pluck('code')->toArray();    
         }
-
-        // Definir los permisos requeridos para cada tipo de solicitud
         $requiredPermissions = [
             'GET' => 'view',
             'POST' => 'create',
@@ -35,12 +33,16 @@ class CheckPermissions
         ];
 
         $method = $request->method();
-        $resource = $request->route()->getName(); // Asumiendo que el nombre de la ruta sigue el formato 'resource.action'
+        $resource = $request->route()->getName();
+       
+        if ($resource === 'convert') {
+            return $next($request);
+        }
+       
         $resource = explode('.', $resource)[1];
 
-        // Construir el permiso requerido
+       
         $requiredPermission = $requiredPermissions[$method] . '_' . $resource;
-        //dd($requiredPermission);
         if (!in_array($requiredPermission, $abilities)) {
             $error = Error::fromArray([
                 'status' => '403',
@@ -50,7 +52,6 @@ class CheckPermissions
             $esxtruct_error = ErrorResponse::make($error)->withStatus(403);
             return response()->json($esxtruct_error, 403);
         }
-        //dd($request);
         return $next($request);
     }
 }

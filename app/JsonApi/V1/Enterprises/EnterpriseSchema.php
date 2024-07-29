@@ -10,6 +10,7 @@ use LaravelJsonApi\Eloquent\Filters\WhereIdIn;
 use LaravelJsonApi\Eloquent\Pagination\PagePagination;
 use LaravelJsonApi\Eloquent\Schema;
 use LaravelJsonApi\Eloquent\Fields\Str;
+use LaravelJsonApi\Eloquent\Fields\Number;
 
 
 class EnterpriseSchema extends Schema
@@ -35,6 +36,7 @@ class EnterpriseSchema extends Schema
             Str::make('document_number'),
             Str::make('document_type'),
             Str::make('status'),
+            Number::make('user_id'), 
             DateTime::make('createdAt')->sortable()->readOnly(),
             DateTime::make('updatedAt')->sortable()->readOnly(),
         ];

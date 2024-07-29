@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Role;
 use App\Models\Enterprise;
+use Illuminate\Database\Eloquent\Builder;
 
 class User extends Authenticatable
 {
@@ -57,4 +58,26 @@ class User extends Authenticatable
     {
         return $this->hasOne(Enterprise::class);
     }
+
+    public function scopeOwners(Builder $query)
+    {
+        return $query->whereHas('enterprise');
+    }
+
+    public function scopeFilterByAttributes(Builder $query, $filters)
+    {
+        if (isset($filters['name'])) {
+            $query->where('name', 'like', '%' . $filters['name'] . '%');
+        }
+        if (isset($filters['email'])) {
+            $query->where('email', 'like', '%' . $filters['email'] . '%');
+        }
+        if (isset($filters['phone'])) {
+            $query->where('phone', 'like', '%' . $filters['phone'] . '%');
+        }
+        return $query;
+    }
+
+   
+    
 }

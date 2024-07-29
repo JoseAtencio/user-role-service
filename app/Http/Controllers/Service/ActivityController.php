@@ -7,11 +7,11 @@ use LaravelJsonApi\Laravel\Http\Controllers\Actions;
 use LaravelJsonApi\Core\Responses\DataResponse;
 use LaravelJsonApi\Core\Responses\ErrorResponse;
 use LaravelJsonApi\Core\Document\Error as JsonApiError;
-use App\Models\User;
+use App\Models\Activity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class UserController extends Controller
+class ActivityController extends Controller
 {
     use Actions\FetchMany;
     use Actions\FetchOne;
@@ -24,15 +24,11 @@ class UserController extends Controller
     use Actions\AttachRelationship;
     use Actions\DetachRelationship;
 
-    public function index(Request $request) {
+    public function index()
+    {
         try {
-            $filters = $request->only(['name', 'email', 'phone', 'is_owner']);
-            $query = User::filterByAttributes($filters);
-            if (isset($filters['is_owner']) && $filters['is_owner']) {
-                $query->owners();
-            }
-            $users = $query->with('enterprise')->get();
-            return DataResponse::make($users);
+            $activities = Activity::all();
+            return DataResponse::make($activities);
         } catch (\Throwable $th) {
             $error = JsonApiError::make()
                 ->setStatus(500)
@@ -41,16 +37,18 @@ class UserController extends Controller
         }
     }
 
-    public function show($user)
+    public function show($activities)
+    
     {
         try {
-            $user = User::findOrFail($user->id);
-            return DataResponse::make($user);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            $error = JsonApiError::make()
-                ->setStatus(404)
-                ->setDetail('User not found');
-            return ErrorResponse::make($error);
+            $activity = Activity::findOrFail($activities->id);
+            if (!$activity) {
+                $error = JsonApiError::make()
+                    ->setStatus(404)
+                    ->setDetail('Activity not found');
+                return ErrorResponse::make($error);
+            }
+            return DataResponse::make($activity);
         } catch (\Throwable $th) {
             $error = JsonApiError::make()
                 ->setStatus(500)
@@ -62,14 +60,15 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $user = User::findOrFail($id);
-            $user->update($request->all());
-            return DataResponse::make($user);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            $error = JsonApiError::make()
-                ->setStatus(404)
-                ->setDetail('User not found');
-            return ErrorResponse::make($error);
+            $activity = Activity::find($id);
+            if (!$activity) {
+                $error = JsonApiError::make()
+                    ->setStatus(404)
+                    ->setDetail('Activity not found');
+                return ErrorResponse::make($error);
+            }
+            $activity->update($request->all());
+            return DataResponse::make($activity);
         } catch (\Throwable $th) {
             $error = JsonApiError::make()
                 ->setStatus(500)
@@ -82,8 +81,8 @@ class UserController extends Controller
     {
         try {
             $data = $request->all();
-            $user = User::create($data);
-            return DataResponse::make($user);
+            $activity = Activity::create($data);
+            return DataResponse::make($activity);
         } catch (\Throwable $th) {
             $error = JsonApiError::make()
                 ->setStatus(500)
@@ -95,14 +94,15 @@ class UserController extends Controller
     public function destroy($id)
     {
         try {
-            $user = User::findOrFail($id);
-            $user->delete();
-            return DataResponse::make($user);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            $error = JsonApiError::make()
-                ->setStatus(404)
-                ->setDetail('User not found');
-            return ErrorResponse::make($error);
+            $activity = Activity::find($id);
+            if (!$activity) {
+                $error = JsonApiError::make()
+                    ->setStatus(404)
+                    ->setDetail('Activity not found');
+                return ErrorResponse::make($error);
+            }
+            $activity->delete();
+            return DataResponse::make($activity);
         } catch (\Throwable $th) {
             $error = JsonApiError::make()
                 ->setStatus(500)

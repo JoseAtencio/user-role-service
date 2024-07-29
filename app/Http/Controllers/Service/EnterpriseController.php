@@ -26,10 +26,15 @@ class EnterpriseController extends Controller
     use Actions\AttachRelationship;
     use Actions\DetachRelationship;
 
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $enterprises = Enterprise::all();
+            $filters = $request->only(['document_type', 'name', 'state']);
+            $query = Enterprise::filterByAttributes($filters);
+            if ($request->has('no_activities') && $request->input('no_activities') == true) {
+                $query->doesntHave('activities');
+            }
+             $enterprises = $query->with('activities')->get();
             return DataResponse::make($enterprises);
         } catch (\Throwable $th) {
             $error = JsonApiError::make()

@@ -24,10 +24,10 @@ enum PermissionEnum: string
     case EDIT_ROLES = 'edit_roles';
     case DELETE_ROLES = 'delete_roles';
 
-    case VIEW_ABILITIES = 'view_abilities';
-    case CREATE_ABILITIES = 'create_abilities';
-    case EDIT_ABILITIES = 'edit_abilities';
-    case DELETE_ABILITIES = 'delete_abilities';
+    case VIEW_ABILITIES = 'view_activities';
+    case CREATE_ABILITIES = 'create_activities';
+    case EDIT_ABILITIES = 'edit_activities';
+    case DELETE_ABILITIES = 'delete_activities';
 
     case SEND_EMAIL = 'send_email';
 }
