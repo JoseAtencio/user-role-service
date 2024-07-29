@@ -37,6 +37,7 @@ Para ejecutar la aplicación localmente, usa el siguiente comando:
 
 ```sh
 php artisan serve
+ ```
 
 # Roles y Permisos de la Aplicación
 
