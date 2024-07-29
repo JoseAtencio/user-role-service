@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Role;
+use App\Models\User;
 use App\Models\Permission;
 use Illuminate\Database\Seeder;
 use App\Enums\PermissionEnum;
@@ -19,6 +20,8 @@ class DatabaseSeeder extends Seeder
         $this->call(UserTableSeeder::class);
         $this->call(ActivityTableSeeder::class);
         $this->assignPermissionsToRoles();
+
+        User::factory(10)->create();
     }
 
     private function assignPermissionsToRoles()
