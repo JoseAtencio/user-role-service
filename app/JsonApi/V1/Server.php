@@ -33,6 +33,9 @@ class Server extends BaseServer
     {
         return [
             \App\JsonApi\V1\Users\UserSchema::class,
+            \App\JsonApi\V1\Notifies\NotifySchema::class,
+            \App\JsonApi\V1\Enterprises\EnterpriseSchema::class,
+            \App\JsonApi\V1\Activities\ActivitySchema::class,
         ];
     }
 }

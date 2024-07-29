@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use LaravelJsonApi\Core\Exceptions\JsonApiException;
+use Illuminate\Auth\AuthenticationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -13,7 +14,6 @@ class Handler extends ExceptionHandler
      *
      * @var array<class-string<\Throwable>, \Psr\Log\LogLevel::*>
      */
-   
     protected $levels = [
         //
     ];
@@ -46,5 +46,12 @@ class Handler extends ExceptionHandler
         $this->renderable(
             \LaravelJsonApi\Exceptions\ExceptionParser::make()->renderable()
         );
+    }
+    
+    
+
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        return response()->json(['message' => 'Unauthenticated.'], 401);
     }
 }
