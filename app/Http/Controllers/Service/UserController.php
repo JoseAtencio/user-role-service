@@ -27,49 +27,48 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-        return DataResponse::make($users);
+        //return DataResponse::make($users);
+        return response()->json($users);
     }
 
     public function show($id)
     {
         $user = User::find($id);
-
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
         }
-
-        return DataResponse::make($user);
+        //return DataResponse::make($user);
+        return response()->json($user);
     }
 
     public function update(Request $request, $id)
     {
         $user = User::find($id);
-
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
         }
-
         $user->update($request->all());
-
-        return DataResponse::make([
-            'message' => 'User updated successfully',
-            'user' => $user
-        ]);
+        return response()->json(
+            [
+                'message' => 'User updated successfully',
+                'user' => $user
+            ]
+        );
     }
 
     public function destroy($id)
     {
         $user = User::find($id);
-
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
         }
-
         $user->delete();
-
-        return DataResponse::make([
-            'message' => 'User deleted successfully',
+        return response()->json(['message' => 
+            'User deleted successfully',
             'user' => $user
         ]);
+        
     }
+
+
 }

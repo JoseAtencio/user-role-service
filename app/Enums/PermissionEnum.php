@@ -14,10 +14,10 @@ enum PermissionEnum: string
     case EDIT_NOTIFIES = 'edit_notifies';
     case DELETE_NOTIFIES = 'delete_notifies';
 
-    case VIEW_ENTERPRISE = 'view_enterprise';
-    case CREATE_ENTERPRISE = 'create_enterprise';
-    case EDIT_ENTERPRISE = 'edit_enterprise';
-    case DELETE_ENTERPRISE = 'delete_enterprise';
+    case VIEW_ENTERPRISE = 'view_enterprises';
+    case CREATE_ENTERPRISE = 'create_enterprises';
+    case EDIT_ENTERPRISE = 'edit_enterprises';
+    case DELETE_ENTERPRISE = 'delete_enterprises';
 
     case VIEW_ROLES = 'view_roles';
     case CREATE_ROLES = 'create_roles';

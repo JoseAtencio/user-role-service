@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Service\UserController;
 use App\Http\Controllers\Service\NotifyController;
+use App\Http\Controllers\Service\EnterpriseController;
 use LaravelJsonApi\Laravel\Facades\JsonApiRoute;
 
 $SERVER_VERSION = 'v1';
@@ -14,7 +15,6 @@ Route::group(['prefix' => $SERVER_VERSION . '/auth'], function () {
 });
 
 Route::group(['middleware' => ['auth:sanctum', 'check-permissions']], function () use ($SERVER_VERSION) {
-    //Route::put($SERVER_VERSION . '/users/{id}', [UserController::class, 'update']);
     JsonApiRoute::server($SERVER_VERSION)->prefix($SERVER_VERSION)->resources(function ($server) {
         $server->resource('users', UserController::class)->only('index','show')->actions(function ($actions) {
             $actions->post('{user}', 'update');
@@ -22,6 +22,13 @@ Route::group(['middleware' => ['auth:sanctum', 'check-permissions']], function (
         });
         $server->resource('notifies', NotifyController::class)->only('index')->actions(function ($actions) {
             $actions->post('send', 'store');
+        });
+        $server->resource('enterprises', EnterpriseController::class)->only('index','show','store')->actions(function ($actions) {
+            $actions->post('{enterprises}', 'update');
+            $actions->delete('{enterprises}', 'destroy');
+            $actions->post('{enterprises}/add_activity', 'add_activities');
+            $actions->post('{enterprises}/remove_activity', 'remove_activities');
+            
         });
     });
 });

@@ -22,7 +22,8 @@ class NotifyController extends Controller
     public function index()
     {
         $notifies = Notify::all();
-        return DataResponse::make($notifies);
+        //return DataResponse::make($notifies);
+        return response()->json($notifies);
     }
 
     public function store(Request $request)
@@ -81,7 +82,7 @@ class NotifyController extends Controller
                 ]);
                 break;
         }
-
-        return DataResponse::make(collect($notifications));
+        return response()->json($notifications);
+        //return DataResponse::make(collect($notifications));
     }
 }

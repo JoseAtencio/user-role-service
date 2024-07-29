@@ -36,13 +36,11 @@ class CheckPermissions
 
         $method = $request->method();
         $resource = $request->route()->getName(); // Asumiendo que el nombre de la ruta sigue el formato 'resource.action'
-
-        // Extraer el recurso de la ruta
         $resource = explode('.', $resource)[1];
 
         // Construir el permiso requerido
         $requiredPermission = $requiredPermissions[$method] . '_' . $resource;
-       // dd($requiredPermission);
+        //dd($requiredPermission);
         if (!in_array($requiredPermission, $abilities)) {
             $error = Error::fromArray([
                 'status' => '403',
